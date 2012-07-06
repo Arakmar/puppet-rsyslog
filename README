@@ -1,0 +1,53 @@
+Overview
+========
+
+This puppet module manages rsyslog and its configuration.
+
+Variables
+=========
+
+$is_rsyslog_server : Define if the current node is a rsyslog server or a client,
+boolean (default false)
+
+Classes
+=======
+
+rsyslog
+----
+
+$server_port: The port of the server (default 514)
+  
+Client specific variables :
+  $remote_logging: Remote logging, boolean (default to true)
+  $protocol: The protocole to use to transmit logs, tcp or udp (default tcp)
+  $server : The server to use, override $rsyslog_server if defined
+
+Server specific variable
+  $enable_tcp: boolean (default true)
+  $enable_udp: boolean (default true)
+  $high_precision_timestamps: boolean (default false)
+
+
+Defines
+=======
+
+rsyslog::config
+----------
+
+Add a configuration file in the /etc/rsyslog.d dir
+
+Variables used :
+	$file_name: The file name to use (default to $name)
+
+
+Licensing
+=========
+
+This puppet module is licensed under the GPL version 3 or later. Redistribution
+and modification is encouraged.
+
+The GPL version 3 license text can be found in the "LICENSE" file accompanying
+this puppet module, or at the following URL:
+
+http://www.gnu.org/licenses/gpl-3.0.html
+ 
