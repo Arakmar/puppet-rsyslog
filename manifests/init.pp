@@ -5,13 +5,9 @@ class rsyslog (
 	$server_port = 514,
 	$enable_tcp                = true,
 	$enable_udp                = true,
-	$high_precision_timestamps = false
+	$high_precision_timestamps = false,
+	$is_rsyslog_server = 'false'
 ) {
-	$is_rsyslog_server = $is_rsyslog_server ? {
-		'' => "false",
-		default => $is_rsyslog_server
-	}
-	
 	service { "rsyslog":
 		ensure  => running,
 		enable  => true,
