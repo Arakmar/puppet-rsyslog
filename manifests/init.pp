@@ -30,25 +30,19 @@ class rsyslog (
         }
 	
 	if $is_rsyslog_server {
-		file { "/etc/rsyslog.conf":
-			ensure  => present,
-			owner   => root,
-			group   => root,
-			mode    => 0644,
-			content => template("rsyslog/server.conf.erb"),
-			notify  => Service["rsyslog"],
-			require => Package["rsyslog"]
-		}
+                $conf_template = 'rsyslog/server.conf.erb'
 	}
 	else {
-		file { "/etc/rsyslog.conf":
-			ensure  => present,
-			owner   => root,
-			group   => root,
-			mode    => 0644,
-			content => template("rsyslog/client.conf.erb"),
-			notify  => Service["rsyslog"],
-			require => Package["rsyslog"]
-		}
+                $conf_template = 'rsyslog/client.conf.erb'
 	}
+
+        file { "/etc/rsyslog.conf":
+                ensure  => present,
+                owner   => root,
+                group   => root,
+                mode    => 0644,
+                content => template($conf_template),
+                notify  => Service["rsyslog"],
+                require => Package["rsyslog"]
+        }
 }
