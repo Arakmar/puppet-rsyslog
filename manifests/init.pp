@@ -17,6 +17,17 @@ class rsyslog (
 		ensure => "installed",
 	}
 	
+	file { "/etc/rsyslog.d":
+                ensure  => directory,
+                owner   => root,
+                group   => root,
+                mode    => 0755,
+                purge => true,
+                force => true,
+                recurse => true,
+                notify  => Service["rsyslog"],
+                require => Package["rsyslog"]
+        }
 	
 	if $is_rsyslog_server {
 		file { "/etc/rsyslog.conf":
@@ -26,6 +37,7 @@ class rsyslog (
 			mode    => 0644,
 			content => template("rsyslog/server.conf.erb"),
 			notify  => Service["rsyslog"],
+			require => Package["rsyslog"]
 		}
 	}
 	else {
@@ -36,6 +48,7 @@ class rsyslog (
 			mode    => 0644,
 			content => template("rsyslog/client.conf.erb"),
 			notify  => Service["rsyslog"],
+			require => Package["rsyslog"]
 		}
 	}
 }
