@@ -36,7 +36,7 @@ class rsyslog (
                 owner   => root,
                 group   => root,
                 mode    => 0644,
-                content => template("rsyslog/client.conf.erb"),
+                content => template("rsyslog/rsyslog.conf.erb"),
                 notify  => Service["rsyslog"],
         }
 }
