@@ -6,9 +6,9 @@
 #			/usr/share/doc/rsyslog-doc/html/rsyslog_conf.html
 
 
-<% if remote_logging -%>
+<% if @remote_logging -%>
 # Log to remote syslog server using <%= protocol %>
-<% if protocol == 'tcp' -%>
+<% if @protocol == 'tcp' -%>
 *.* @@<%= server -%>:<%= server_port -%>
 <% else -%>
 *.* @<%= server -%>:<%= server_port -%>
@@ -24,6 +24,18 @@ $ModLoad imuxsock # provides support for local system logging
 $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 #$ModLoad immark  # provides --MARK-- message capability
 
+<% if @listen_udp -%>
+# Load UDP module
+$ModLoad imudp
+$UDPServerRun <%= listen_udp_port %>
+<% end -%>
+
+<% if @listen_tcp -%>
+# Load TCP module
+$ModLoad imtcp
+$InputTCPServerRun <%= listen_tcp_port %>
+<% end -%>
+
 # provides UDP syslog reception
 #$ModLoad imudp
 #$UDPServerRun 514
@@ -37,11 +49,13 @@ $ModLoad imklog   # provides kernel logging support (previously done by rklogd)
 #### GLOBAL DIRECTIVES ####
 ###########################
 
+<% if high_precision_timestamps == false -%>
 #
 # Use traditional timestamp format.
 # To enable high precision timestamps, comment out the following line.
 #
 $ActionFileDefaultTemplate RSYSLOG_TraditionalFileFormat
+<% end -%>
 
 #
 # Set the default permissions for all log files.
@@ -53,10 +67,16 @@ $DirCreateMode 0755
 $Umask 0022
 
 #
+# Where to place spool and state files
+#
+$WorkDirectory /var/spool/rsyslog
+
+#
 # Include all config files in /etc/rsyslog.d/
 #
 $IncludeConfig /etc/rsyslog.d/*.conf
 
+<% if @remote_logging == false || @local_logging -%>
 
 ###############
 #### RULES ####
@@ -65,54 +85,54 @@ $IncludeConfig /etc/rsyslog.d/*.conf
 #
 # First some standard log files.  Log by facility.
 #
-auth,authpriv.*			/var/log/auth.log
-*.*;auth,authpriv.none		-/var/log/syslog
-#cron.*				/var/log/cron.log
-daemon.*			-/var/log/daemon.log
-kern.*				-/var/log/kern.log
-lpr.*				-/var/log/lpr.log
-mail.*				-/var/log/mail.log
-user.*				-/var/log/user.log
+auth,authpriv.*                 /var/log/auth.log
+*.*;auth,authpriv.none          -/var/log/syslog
+#cron.*                         /var/log/cron.log
+daemon.*                        -/var/log/daemon.log
+kern.*                          -/var/log/kern.log
+lpr.*                           -/var/log/lpr.log
+mail.*                          -/var/log/mail.log
+user.*                          -/var/log/user.log
 
 #
 # Logging for the mail system.  Split it up so that
 # it is easy to write scripts to parse these files.
 #
-mail.info			-/var/log/mail.info
-mail.warn			-/var/log/mail.warn
-mail.err			/var/log/mail.err
+mail.info                       -/var/log/mail.info
+mail.warn                       -/var/log/mail.warn
+mail.err                        /var/log/mail.err
 
 #
 # Logging for INN news system.
 #
-news.crit			/var/log/news/news.crit
-news.err			/var/log/news/news.err
-news.notice			-/var/log/news/news.notice
+news.crit                       /var/log/news/news.crit
+news.err                        /var/log/news/news.err
+news.notice                     -/var/log/news/news.notice
 
 #
 # Some "catch-all" log files.
 #
 *.=debug;\
-	auth,authpriv.none;\
-	news.none;mail.none	-/var/log/debug
+        auth,authpriv.none;\
+        news.none;mail.none     -/var/log/debug
 *.=info;*.=notice;*.=warn;\
-	auth,authpriv.none;\
-	cron,daemon.none;\
-	mail,news.none		-/var/log/messages
+        auth,authpriv.none;\
+        cron,daemon.none;\
+        mail,news.none          -/var/log/messages
 
 #
 # Emergencies are sent to everybody logged in.
 #
-*.emerg				*
+*.emerg                         :omusrmsg:*
 
 #
 # I like to have messages displayed on the console, but only on a virtual
 # console I usually leave idle.
 #
 #daemon,mail.*;\
-#	news.=crit;news.=err;news.=notice;\
-#	*.=debug;*.=info;\
-#	*.=notice;*.=warn	/dev/tty8
+#       news.=crit;news.=err;news.=notice;\
+#       *.=debug;*.=info;\
+#       *.=notice;*.=warn       /dev/tty8
 
 # The named pipe /dev/xconsole is for the `xconsole' utility.  To use it,
 # you must invoke `xconsole' with the `-file' option:
@@ -123,6 +143,7 @@ news.notice			-/var/log/news/news.notice
 #      busy site..
 #
 daemon.*;mail.*;\
-	news.err;\
-	*.=debug;*.=info;\
-	*.=notice;*.=warn	|/dev/xconsole
+        news.err;\
+        *.=debug;*.=info;\
+        *.=notice;*.=warn       |/dev/xconsole
+<% end -%>
