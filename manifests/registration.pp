@@ -11,7 +11,7 @@ class rsyslog::registration(
                 @@concat::fragment{ 'rsyslog_register_tcp_${::fqdn}_${server_name}':
                         target  => '/etc/rsyslog.d/allowed_hosts.conf',
                         content => template("rsyslog/register_tcp.conf"),
-                        tag     => 'rsyslog_register_tcp_${server_name}',
+                        tag     => "rsyslog_register_tcp_${server_name}",
                 }
         }
 
@@ -19,7 +19,7 @@ class rsyslog::registration(
                 @@concat::fragment{ 'rsyslog_register_udp_${::fqdn}_${server_name}':
                         target  => '/etc/rsyslog.d/allowed_hosts.conf',
                         content => template("rsyslog/register_udp.conf"),
-                        tag     => 'rsyslog_register_udp_${server_name}',
+                        tag     => "rsyslog_register_udp_${server_name}",
                 }
         }
 }
