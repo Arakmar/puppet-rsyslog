@@ -1,4 +1,4 @@
-define rsyslog::register(
+class rsyslog::registration(
         $server_name = 'default',
         $use_tcp = true,
         $use_udp = false
