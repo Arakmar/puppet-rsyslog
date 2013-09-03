@@ -6,6 +6,7 @@ class rsyslog::server (
         $high_precision_timestamps = false,
         $server_name = 'default'
 ) {
+        include concat::setup
         class {
                 'rsyslog':
                         listen_tcp => $listen_tcp,
@@ -27,8 +28,8 @@ class rsyslog::server (
                 }
         }
 
-        concat::fragment {"rsync_resgister_header":
-                target => "/etc/rsyslog.d/allowed_hosts.conf"
+        concat::fragment {"rsync_register_header":
+                target => "/etc/rsyslog.d/allowed_hosts.conf",
                 content => template("rsyslog/register_header.conf"),
                 order => 05,
         }
