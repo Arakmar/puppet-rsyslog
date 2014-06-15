@@ -6,7 +6,6 @@ class rsyslog::server (
         $high_precision_timestamps = false,
         $server_name = 'default'
 ) {
-        include concat::setup
         class {
                 'rsyslog':
                         listen_tcp => $listen_tcp,
