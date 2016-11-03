@@ -23,7 +23,7 @@ class rsyslog (
                 ensure  => directory,
                 owner   => root,
                 group   => root,
-                mode    => 0755,
+                mode    => '0755',
                 purge => true,
                 force => true,
                 recurse => true,
@@ -35,7 +35,7 @@ class rsyslog (
                 ensure  => present,
                 owner   => root,
                 group   => root,
-                mode    => 0644,
+                mode    => '0644',
                 content => template("rsyslog/rsyslog.conf.erb"),
                 notify  => Service["rsyslog"],
         }
