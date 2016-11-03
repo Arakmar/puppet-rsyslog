@@ -36,7 +36,7 @@ class rsyslog::server (
         concat{ "/etc/rsyslog.d/allowed_hosts.conf":
                 owner => root, 
                 group => root, 
-                mode => 0644,
+                mode => '0644',
                 notify => Service["rsyslog"],
                 require => Package["rsyslog"]
         }
