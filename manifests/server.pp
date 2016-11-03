@@ -17,13 +17,15 @@ class rsyslog::server (
 
         if listen_tcp {
                 Concat::Fragment <<| tag == "rsyslog_register_tcp_${server_name}" |>> {
-                        target => "/etc/rsyslog.d/allowed_hosts.conf"
+                        target => "/etc/rsyslog.d/allowed_hosts.conf",
+                        order => 10,
                 }
         }
 
         if listen_udp {
                 Concat::Fragment <<| tag == "rsyslog_register_udp_${server_name}" |>> {
-                        target => "/etc/rsyslog.d/allowed_hosts.conf"
+                        target => "/etc/rsyslog.d/allowed_hosts.conf",
+                        order => 20,
                 }
         }
 
