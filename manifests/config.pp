@@ -11,7 +11,7 @@ define rsyslog::config(
 		group   => 'root',
 		mode    => '0644',
 		source  => 
-			["puppet:///modules/site-rsyslog/rsyslog.d/${file_name}.conf",
+			["puppet:///modules/site_rsyslog/rsyslog.d/${file_name}.conf",
 			"puppet:///modules/rsyslog/rsyslog.d/${file_name}.conf" ],
 		require => Package['rsyslog'],
 		notify  => Service['rsyslog'],
