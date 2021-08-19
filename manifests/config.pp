@@ -2,9 +2,9 @@ define rsyslog::config(
 	$file_name = $name,
 	$source
 ) {
-        if ! defined(Class['rsyslog']) {
-                fail('You must include the rsyslog base class before using any rsyslog defined resources')
-        }
+	if !defined(Class['rsyslog']) {
+		fail('You must include the rsyslog base class before using any rsyslog defined resources')
+	}
 
 	file { "/etc/rsyslog.d/${name}.conf":
 		ensure  => file,
