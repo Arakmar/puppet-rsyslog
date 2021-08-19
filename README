@@ -38,6 +38,7 @@ Add a configuration file in the /etc/rsyslog.d dir
 
 Variables used :
 	$file_name: The file name to use (default to $name)
+	$source : The path to the config file to use
 
 
 Licensing
